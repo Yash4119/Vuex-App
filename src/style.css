@@ -1,0 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,600&display=swap');
+
+
+body{
+    font-family: 'Playfair Display', serif;
+    background-color: rgb(224, 255, 255);
+}
