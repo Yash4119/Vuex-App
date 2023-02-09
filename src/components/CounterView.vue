@@ -14,7 +14,7 @@
             <div class="col-md-5">
                 <div class="card shadow-lg">
                     <div class="card-body">
-                        <p class="h3 display-3"> {{ count }} </p>
+                        <p class="h3 display-3"> {{ counterState.count }} </p>
                         <button class="btn btn-success m-1" v-on:click="incrementCount">Increment</button>
                         <button class="btn btn-warning m-2" @click="decrementCount">Decrement</button>
                         <button class="btn btn-danger m-1" @click="incrementCountBy(by)">Increment By</button>
@@ -31,26 +31,29 @@
 
 <script>
 
+import { mapGetters } from 'vuex';
+
 export default{
     name: "CounterView",
     data(){
         return{
-            count:0,
             by:0,
-            incBy:false
         }
     },
     methods:{
         incrementCount(){
-            this.count += 1;
+            this.$store.dispatch("counterModule/incrementCount")
         },
         incrementCountBy(by){
-            this.count += by;
+            this.$store.dispatch("counterModule/incrementCountBy",{value:by})
         },
         decrementCount(){
-            if(this.count > 0)this.count -= 1;
+            this.$store.dispatch("counterModule/decrementCount")
         }
-    }
+    },
+    computed: mapGetters({
+        counterState : "getCounterState"
+    })
 }
 
 </script>
