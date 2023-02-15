@@ -141,3 +141,8 @@ export default {
   
 }
 </script>
+<style>
+  .text-center{
+    background-color: rgb(196, 241, 241);
+  }
+</style>
