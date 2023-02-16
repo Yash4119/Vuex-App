@@ -6,17 +6,26 @@
         <div class="col-md-12 mt-5">
           <img src="../assets/logo.png" alt="">
           <h1 class="mt-3">Welcome to my Vuex Application</h1>
-          <!-- <div id="firebaseui-auth-container"></div>
           <div class="container">
-            <div class="row">
-              <div class="col-md-12 mt-5">
-                <h2 v-if="user">Signed in User :- {{ user }} </h2>
-                <div class="logout" v-if="isSignedIn">
-                  <button class=" btn btn-warning" @click="handleSignOut">LogOut</button>
-                </div>
+            <form @submit.prevent="addDataTo">
+              <div class="form-group">
+                <input type="text" class="form-control" v-model="name" placeholder="Enter Your Name">
               </div>
+              <div class="form-group">
+                <input type="email" class="form-control" v-model="email" placeholder="Enter Your Email Id">
+              </div>
+              <button type="submit" class="btn btn-primary">Add Data</button>
+            </form>
+          </div>
+          <div class="container">
+            <button @click="getDataTo">Get Data</button>
+            <div class="col-md-6">
+              <ul class="list-group">
+                <li class="list-item" v-for="item in users" :key="item.id">{{ item.name }}</li>
+              </ul>
             </div>
-          </div> -->
+          </div>
+
         </div>
       </div>
     </div>
@@ -46,74 +55,23 @@
 </template>
 
 <script>
-// import firebase from "firebase/compat/app"
-// import * as firebaseui from 'firebaseui'
-// import "firebaseui/dist/firebaseui.css"
-// import { getAuth, signOut} from "firebase/auth"
 import firebaseConfig from "../firebaseConfig"
 import { getAuth, signInWithPopup, signOut, GoogleAuthProvider } from "firebase/auth"
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
+import { addData, getData} from "../firebaseConfig";
 firebaseConfig
 
-// firebase.initializeApp(firebaseConfig)
-
-
-// const uiConfig = {
-//   signInFlow:'popup',
-//   signInSuccessUrl: "http://localhost:8080/",
-//   signInOptions: firebase.auth.GoogleAuthProvider.Provider_ID,
-//   callbacks:{
-//     signInSuccessWithAuthResult: function(authResult){
-//       this.user.value = authResult.user.displayName;
-//       this.isSignedIn = true;
-//       alert("Signed In Successfully")
-//       return false;
-//     }
-//   }
-// }
-// var ui = new firebaseui.auth.AuthUI(auth)
-// ui.start("#firebaseui-auth-container",uiConfig)
 
 export default {
   name: 'HomeView',
-  // setup() {
-  //   const user = "";
-  //   const isSignedIn = false;
-  //   const uiConfig = {
-  //       signInFlow:'popup',
-  //       signinSuccessUrl: "http://localhost:8080/",
-  //       signInOptions: firebase.auth.GoogleAuthProvider.Provider_ID,
-  //       callbacks:{
-  //         signInSuccessWithAuthResult: function(authResult){
-  //           user.value = authResult.user.displayName;
-  //           isSignedIn.value = true;
-  //           alert("Signed In Successfully")
-  //           return false;
-  //         }
-  //       }
-  //     };
-  //     var ui = new firebaseui.auth.AuthUI(firebase.auth());
-  //     ui.start("#firebaseui-auth-container",uiConfig);
-
-  //     const handleSignOut = ()=>{
-  //       signOut(auth).then(()=>{
-  //         user.value = null
-  //         alert("SignedOut Successful")
-  //       }).catch((error)=>{
-  //         console.log(error)
-  //       })
-  //     }
-
-  //     return{
-  //       user,
-  //       isSignedIn,
-  //       handleSignOut
-  //     }
   data(){
     return{
       user:"",
-      isSignedIn:false
+      isSignedIn:false,
+      name:"",
+      email:"",
+      users:{}
     }
   },
   methods:{
@@ -136,9 +94,17 @@ export default {
         console.log(error)
       })
     },
-    
-  },
-  
+    addDataTo(){
+      addData({"name":this.name, "email":this.email});
+      this.name = "",
+      this.email = ""
+    },
+    getDataTo(){
+      this.users = getData();
+      console.log(typeof(this.users))
+      console.log(this.users);
+    }
+  },  
 }
 </script>
 <style>

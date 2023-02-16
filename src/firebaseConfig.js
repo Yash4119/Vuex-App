@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc,  deleteDoc, doc, query, where, getDocs} from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -19,31 +19,55 @@ export const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const putData = async() => {
-  try {
-    const docRef = await addDoc(collection(db, "users"), {
-      first: "Yash",
-      last: "Coder",
-      born: 2000
+const usersref = collection(db,'users');
+
+export const addData = async(user) =>{
+  try{
+    const res = await addDoc(collection(db, 'users'),{
+      name : user.name,
+      email : user.email
     });
-    console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-    console.error("Error adding document: ", e);
+    console.log(res);
+  }catch(error){
+    console.log(error)
   }
 }
 
-const getData = async () => {
+export const delData = async () => {
   try {
-    const querySnapshot = await getDocs(collection(db, "users"));
-    querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data().first}`);
-    });
+    const users = query(usersref, where('name' , '==', 'Yash'));
+    console.log(users);
+    
+    users.forEach((docc) => {
+      deleteDoc(doc(usersref, docc.id));
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const getData = async () => {
+  try {
+    const q = await getDocs(usersref);
+    
+    const users = [];
+    q.forEach((docc) => {
+      // console.log(docc)
+      users.push([
+                  docc.id,
+                  docc._document.data.value.mapValue.fields.name.stringValue,
+                  docc._document.data.value.mapValue.fields.email.stringValue
+                ])
+    })
+    return users
+    // console.log(typeof(users));
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 };
 
-putData();
+// deleteDoc(db,'users')
+
 getData();
 
-export default app;
+export default (app,usersref);
