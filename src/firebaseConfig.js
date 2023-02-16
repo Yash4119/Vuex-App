@@ -52,14 +52,14 @@ export const getData = async () => {
     
     const users = [];
     q.forEach((docc) => {
-      console.log(docc)
+      // console.log(docc)
       users.push([
                   docc.id,
                   docc._document.data.value.mapValue.fields.name.stringValue,
                   docc._document.data.value.mapValue.fields.email.stringValue
                 ])
     })
-    // console.log(typeof(users));
+    console.log(users);
     return users
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -68,6 +68,5 @@ export const getData = async () => {
 
 // deleteDoc(db,'users')
 
-getData();
 
 export default (app,usersref);

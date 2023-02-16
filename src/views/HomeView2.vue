@@ -101,8 +101,8 @@ export default {
     },
     getDataTo(){
       this.users = getData();
-      console.log(typeof(this.users))
-      console.log(this.users);
+      // console.log(typeof(this.users))
+      // console.log(this.users);
     }
   },  
 }
