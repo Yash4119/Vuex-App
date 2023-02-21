@@ -7,8 +7,9 @@
           <h1 class="mt-3">Welcome to my Vuex Application</h1>
           <div class="container row">
             <div class="col-sm-4"></div>
-            <div class="col-sm-4">
-              <!-- <form @submit.prevent="addDataTo">
+            <div class="col-sm-4" v-if="isSignedIn">
+              <!-- <button @click="addDataTo">Add Data</button> -->
+              <form @submit.prevent="addDataTo">
                 <div class="form-group">
                   <input
                     type="text"
@@ -26,19 +27,15 @@
                   />
                 </div>
                 <button type="submit" class="btn btn-primary">Add Data</button>
-              </form> -->
+              </form>
             </div>
             <div class="col-sm-4"></div>
           </div>
           <div class="container row" v-if="isSignedIn">
-            <div class="col-md-12 my-3">
-              <!-- <button @click="getDataTo" class="btn btn-warning">Get Data</button> -->
-              <h2 class="text-warning text-center">Data In Database</h2>
-            </div>
             <div class="col-md-12" >
+              <h2 class="text-warning text-center">Data In Database</h2>
               <table
                 class="table table-hover text-center table-striped my-3"
-                
               >
                 <thead class="bg-secondary text-white">
                   <th>Name</th>
@@ -49,6 +46,7 @@
                   <tr v-for="user in users" :key="user.id">
                     <td>{{ user.name }}</td>
                     <td>{{ user.email }}</td>
+                    <td>{{ user.id }}</td>
                     <td>
                       <button class="btn btn-danger" @click="delData(user.id)">
                         Delete
@@ -109,6 +107,7 @@ export default {
       isSignedIn: false,
       name: "",
       email: "",
+      id:null,
       users: null
     }
   },
@@ -117,7 +116,7 @@ export default {
       signInWithPopup(auth, provider)
         .then((result) => {
           alert("Signed In Successfully")
-          addData({ "name": result.user.displayName, "email": result.user.email });
+          addData({ "name": result.user.displayName, "email": result.user.email,"id":result.user.uid });
           this.user = result.user.displayName
           this.isSignedIn = true
         }).catch((error) => {

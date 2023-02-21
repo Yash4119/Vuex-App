@@ -32,11 +32,12 @@ export const addData = async(user) =>{
   }
 }
 
+addData({name:"Yash",email:"Testing@gmail.com"});
+
 export const getData = async () => {
   const snapshot = await getDocs(collection(db,'users'));
   const data = snapshot.docs.map(doc => ({id:doc.id, ...doc.data()}))
 
-  // console.log(data);
   return data
 };
 
