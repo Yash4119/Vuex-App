@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { collection, addDoc,  deleteDoc, doc, query, where, getDocs} from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc} from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -19,7 +19,6 @@ export const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const usersref = collection(db,'users');
 
 export const addData = async(user) =>{
   try{
@@ -33,40 +32,20 @@ export const addData = async(user) =>{
   }
 }
 
-export const delData = async () => {
-  try {
-    const users = query(usersref, where('name' , '==', 'Yash'));
-    console.log(users);
-    
-    users.forEach((docc) => {
-      deleteDoc(doc(usersref, docc.id));
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
 export const getData = async () => {
-  try {
-    const q = await getDocs(usersref);
-    
-    const users = [];
-    q.forEach((docc) => {
-      // console.log(docc)
-      users.push([
-                  docc.id,
-                  docc._document.data.value.mapValue.fields.name.stringValue,
-                  docc._document.data.value.mapValue.fields.email.stringValue
-                ])
-    })
-    console.log(users);
-    return users
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
+  const snapshot = await getDocs(collection(db,'users'));
+  const data = snapshot.docs.map(doc => ({id:doc.id, ...doc.data()}))
+
+  // console.log(data);
+  return data
 };
+
+export const deleteData= async(uid)=>{
+  await deleteDoc(doc(db,'users',uid))
+  console.log("Done",uid)
+}
 
 // deleteDoc(db,'users')
 
 
-export default (app,usersref);
+export default (db);
